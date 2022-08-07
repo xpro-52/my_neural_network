@@ -45,7 +45,7 @@ class BaseNN:
     def __str__(self) -> str:
         return "<%s: {\n %s \n}>" % (
             self.__class__.__name__,
-            "\n".join(["\t" + str(layer) for layer in self.layers]),
+            "\n".join(["\t" + str(layer) + "," for layer in self.layers]),
         )
 
 
@@ -88,6 +88,7 @@ def learnNN(
         if process and (i + 1) % 20 == 0:
             print("train accuracy: %f" % accuracy)
 
+    optimizer.reset_parameters()
     return train_accuracies
 
 
@@ -122,7 +123,7 @@ def learnNN(
 
 
 def cross_check(
-    NN: Callable[[int, int], BaseNN],
+    nn: BaseNN,
     random_seed: int,
     X: np.ndarray,
     y: np.ndarray,
@@ -131,6 +132,7 @@ def cross_check(
     batch_size: int,
     iteration: int,
     n: int,
+    process=True,
 ):
     split_indices = np.array_split(np.arange(0, X.shape[0], 1), n)
     acc_list = np.zeros(n)
@@ -140,7 +142,6 @@ def cross_check(
         train_y = np.delete(y, split_indices[i]).reshape(-1, 1)
         test_X = X[split_indices[i]]
         test_y = y[split_indices[i]].reshape(-1, 1)
-        nn = NN(train_X.shape[1], random_seed)
 
         learnNN(
             nn,
@@ -160,6 +161,9 @@ def cross_check(
             / test_y.size
         )
         acc_list[i] = acc
-        print("End of part %d: %.3f%%" % (i + 1, acc))
+        if process:
+            print("End of part %d: %.3f%%" % (i + 1, acc))
+        nn.reset_parameters()
+        optimizer.reset_parameters()
 
     return np.mean(acc_list), np.std(acc_list)

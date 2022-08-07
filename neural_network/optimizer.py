@@ -13,6 +13,12 @@ class Optimizer:
     ) -> None:
         return
 
+    def reset_parameters(self):
+        return
+
+    def __str__(self) -> str:
+        return "<%s>" % self.__class__.__name__
+
 
 class StochasticGradientDecent(Optimizer):
     def update(
@@ -25,6 +31,21 @@ class StochasticGradientDecent(Optimizer):
     ) -> None:
         for parameter, gradient in zip(parameters, gradients):
             parameter -= rho * gradient
+        return
+
+
+class AdaGrad(Optimizer):
+    def update(
+        self,
+        parameters: List[np.ndarray],
+        gradients: List[np.ndarray],
+        rho: float,
+        *args,
+        **kwargs
+    ) -> None:
+        for parameter, gradient in zip(parameters, gradients):
+            parameter -= rho * (gradient / np.sqrt(np.linalg.norm(gradient)))
+        return
 
 
 class Adam(Optimizer):
@@ -65,3 +86,10 @@ class Adam(Optimizer):
                 * (self.m[i] / (1 - beta1**self.t))
                 / (np.sqrt(self.v[i] / (1 - beta2**self.t)) + 1e-7)
             )
+        return
+
+    def reset_parameters(self):
+        self.t = 0
+        self.m = None
+        self.v = None
+        return

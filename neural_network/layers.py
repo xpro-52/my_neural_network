@@ -65,7 +65,7 @@ class ReLU(ActivationFunctionLayer):
         return y
 
     def backward(self, delta: np.ndarray) -> np.ndarray:
-        if not self.y:
+        if self.y is None:
             raise Exception()
         return delta * np.where(self.y > 0, 1, 0)
 
@@ -80,9 +80,24 @@ class LeakyReLU(ActivationFunctionLayer):
         return y
 
     def backward(self, delta: np.ndarray) -> np.ndarray:
-        if not self.y:
+        if self.y is None:
             raise Exception()
         return delta * np.where(self.y > 0, 1, 0.01)
+
+
+class Tanh(ActivationFunctionLayer):
+    def __init__(self) -> None:
+        super().__init__()
+
+    def forward(self, x: np.ndarray) -> np.ndarray:
+        y = np.tanh(x)
+        self.y = y
+        return y
+
+    def backward(self, delta: np.ndarray) -> np.ndarray:
+        if self.y is None:
+            raise Exception()
+        return 1 / (np.cosh(delta)) ** 2
 
 
 class FullyConnectedLayer(NeuronsLayer):

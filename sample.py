@@ -1,8 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
+
+plt.style.use("ggplot")
 from neural_network.layers import FullyConnectedLayer, Sigmoid
 from neural_network.base import BaseNN, learnNN
 from neural_network.optimizer import Adam, StochasticGradientDecent
+from neural_network.layers import LeakyReLU
 
 
 class ThreeLayerNN(BaseNN):
@@ -44,11 +47,11 @@ if __name__ == "__main__":
     nn = ThreeLayerNN(train_X.shape[1], random_seed)
     print(nn)
 
-    rho = 1e-4  # learning rate
+    rho = 1e-3  # learning rate
     # optimizer = StochasticGradientDecent()
     optimizer = Adam()
     batch_size = 100
-    iteration = 1000
+    iteration = 500
 
     train_accuracies = learnNN(
         nn,
@@ -64,11 +67,10 @@ if __name__ == "__main__":
 
     plt.plot(range(iteration), train_accuracies)
     min_acc = min(train_accuracies)
-    plt.yticks(np.arange(min_acc - min_acc % 0.025, 1, 0.025))
+    plt.yticks(np.arange(min_acc - min_acc % 0.025, 1.025, 0.025))
     plt.title("training accuracy")
     plt.xlabel("iteration")
     plt.ylabel("accuracy")
-    plt.grid()
     plt.savefig("./nn.png")
 
     predictions = np.zeros_like(test_y)
@@ -76,3 +78,4 @@ if __name__ == "__main__":
     print(
         "test acc: %.3f" % (np.sum(predictions == test_y) / predictions.size)
     )
+    nn.reset_parameters()
