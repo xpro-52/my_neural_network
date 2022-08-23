@@ -4,7 +4,12 @@ import matplotlib.pyplot as plt
 plt.style.use("ggplot")
 from neural_network.layers import FullyConnectedLayer, Sigmoid
 from neural_network.base import BaseNN, learnNN
-from neural_network.optimizer import Adam, StochasticGradientDecent
+from neural_network.optimizer import (
+    AdaGrad,
+    Adam,
+    Momentum,
+    StochasticGradientDecent,
+)
 from neural_network.layers import LeakyReLU
 
 
@@ -49,6 +54,8 @@ if __name__ == "__main__":
 
     rho = 1e-3  # learning rate
     # optimizer = StochasticGradientDecent()
+    # optimizer = Momentum()
+    # optimizer = AdaGrad()
     optimizer = Adam()
     batch_size = 100
     iteration = 500

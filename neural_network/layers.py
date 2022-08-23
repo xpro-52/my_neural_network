@@ -34,6 +34,23 @@ class ActivationFunctionLayer(Layer):
         return "<%s>" % self.__class__.__name__
 
 
+class ErrorFunctionLayer(Layer):
+    def __init__(self) -> None:
+        super().__init__()
+
+    def forward(self, x: np.ndarray) -> np.ndarray:
+        return super().forward(x)
+
+    def backward(self, delta: np.ndarray) -> np.ndarray:
+        return super().backward(delta)
+
+    def reset_parameters(self) -> None:
+        return super().reset_parameters()
+
+    def __str__(self) -> str:
+        return super().__str__()
+
+
 class Sigmoid(ActivationFunctionLayer):
     def __init__(self) -> None:
         super().__init__()
